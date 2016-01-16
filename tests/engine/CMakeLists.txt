@@ -1,7 +1,10 @@
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
-add_executable(runUnitTests
-        Vector3D_test.cpp)
+set(SOURCE_FILES
+        vector3D_test.cpp
+        world_test.cpp)
+
+add_executable(runUnitTests ${SOURCE_FILES})
 
 target_link_libraries(runUnitTests gtest gtest_main)
-#target_link_libraries(runUnitTests engine)
+target_link_libraries(runUnitTests engine)

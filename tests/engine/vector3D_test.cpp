@@ -3,7 +3,7 @@
 //
 
 #include "gtest/gtest.h"
-#include "Vector3D.h"
+#include "vector3D.h"
 
 TEST(Vector3dTest, CrossProduct) {
     Vector3D<int> v1{3,-3,1};

@@ -3,6 +3,10 @@ project(engine)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Werror")
 
 set(HEADER_FILES
-        Vector3D.h)
+        vector3D.h
+        world.h)
 
-#add_library(engine STATIC ${HEADER_FILES})
+set(SOURCE_FILES
+        world.cpp)
+
+add_library(engine STATIC ${SOURCE_FILES} ${HEADER_FILES})
