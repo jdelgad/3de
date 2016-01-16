@@ -7,8 +7,14 @@ include_directories(${SDL_INCLUDE_DIR})
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Werror")
 
-set(SOURCE_FILES main.cpp)
-add_executable(3de ${SOURCE_FILES})
+set(HEADER_FILES
+        engine/Coordinate2D.h)
+
+set(SOURCE_FILES
+        main.cpp
+        engine/Coordinate2D.cpp)
+
+add_executable(3de ${SOURCE_FILES} ${HEADER_FILES})
 
 include_directories(engine)
 

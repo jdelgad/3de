@@ -1,16 +1,10 @@
+// MIT License, (C)2016
+// Created by jdelgad on 1/16/16.
 //#include "SDL.h"
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <sstream>
-
-class Sector {
-public:
-private:
-    float floor;
-    float ceiling;
-    signed char *neighbors;
-};
 
 void LoadData() {
     const char SPACE = ' ';
