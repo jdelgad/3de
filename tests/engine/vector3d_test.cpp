@@ -24,3 +24,13 @@ TEST(Vector3dTest, CrossProductReturnsZeroVector) {
     EXPECT_EQ(0, result.getY());
     EXPECT_EQ(0, result.getZ());
 }
+
+TEST(Vector3dTest, CrossProductIn2D) {
+    Vector3D<int> v1{3,-3,0};
+    Vector3D<int> v2{4,9,0};
+    Vector3D<int> result = v1.cross_product(v2);
+
+    EXPECT_EQ(0, result.getX());
+    EXPECT_EQ(0, result.getY());
+    EXPECT_EQ(39, result.getZ());
+}
