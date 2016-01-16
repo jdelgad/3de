@@ -1,5 +1,5 @@
-//
-// Created by jacob on 1/16/16.
+// MIT License, (C)2016
+// Created by jdelgad on 1/16/16.
 //
 
 #include "gtest/gtest.h"
