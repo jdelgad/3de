@@ -23,4 +23,6 @@ float Vertex::getY() const {
 }
 
 
-
+bool Vertex::operator==(Vertex const &v) const {
+    return x == v.x && y == v.y;
+}

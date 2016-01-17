@@ -14,6 +14,7 @@ public:
     float getX() const;
     float getY() const;
 
+    bool operator==(Vertex const &v) const;
 private:
     float x;
     float y;

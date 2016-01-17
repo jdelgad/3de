@@ -16,3 +16,15 @@ TEST(VertexTest, Initialize) {
     EXPECT_EQ(1, v.getX());
     EXPECT_EQ(2, v.getY());
 }
+
+TEST(VertexTest, Equals) {
+    Vertex v1(1, 2);
+    Vertex v2(1, 2);
+    EXPECT_TRUE(v1 == v2);
+}
+
+TEST(VertexTest, NotEquals) {
+    Vertex v1(1, 2);
+    Vertex v2(3, 4);
+    EXPECT_FALSE(v1 == v2);
+}
