@@ -19,3 +19,8 @@ TEST(WorldTest, LoadFileSuccess) {
     EXPECT_EQ(12, w.getVertex());
 
 }
+
+TEST(WorldTest, LoadInvalidData) {
+    World w;
+    EXPECT_THROW(w.load("../data/map-invaliddata.txt"), std::runtime_error);
+}
