@@ -16,6 +16,8 @@ public:
     T getY() const;
     T getZ() const;
 
+    void setZ(float d);
+
 private:
     Vector3D();
 
@@ -51,6 +53,11 @@ T Vector3D<T>::getY() const {
 template<typename T>
 T Vector3D<T>::getZ() const {
     return z;
+}
+
+template<typename T>
+void Vector3D<T>::setZ(float z) {
+    this->z = z;
 }
 
 #endif //INC_3DE_VECTOR3D_H

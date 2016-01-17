@@ -15,11 +15,9 @@ TEST(WorldTest, LoadFileSuccess) {
     EXPECT_NO_THROW(w.load("../data/map-clear.txt"));
 
     std::vector<Sector> sectors = w.get_sectors();
-    std::vector<Vertex> sv = sectors[0].get_vertices();
-
-    EXPECT_EQ(1, w.get_player());
     EXPECT_EQ(25, static_cast<int>(sectors.size()));
 
+    std::vector<Vertex> sv = sectors[0].get_vertices();
     EXPECT_EQ(1, sv[0].getX());
     EXPECT_EQ(2, sv[0].getY());
     EXPECT_EQ(5, sv[1].getX());
@@ -28,6 +26,20 @@ TEST(WorldTest, LoadFileSuccess) {
     EXPECT_EQ(11, sv[2].getY());
     EXPECT_EQ(1, sv[3].getX());
     EXPECT_EQ(16, sv[3].getY());
+
+    Player player = w.get_player();
+    EXPECT_EQ(1, player.get_sector());
+    EXPECT_EQ(1, player.get_angle());
+    Vector3D<float> location = player.get_location();
+    EXPECT_EQ(2, location.getX());
+    EXPECT_EQ(6, location.getY());
+    EXPECT_EQ(6, location.getZ());
+
+    Vector3D<float> velocity = player.get_velocity();
+    EXPECT_EQ(0, velocity.getX());
+    EXPECT_EQ(0, velocity.getY());
+    EXPECT_EQ(0, velocity.getZ());
+
 }
 
 TEST(WorldTest, LoadInvalidData) {

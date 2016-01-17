@@ -19,7 +19,6 @@ void World::load(std::string const &filename) {
     std::string line;
     std::vector<Vertex> vertices;
     sectors.clear();
-    player = 0;
     while (std::getline(map, line)) {
         std::istringstream ss(line);
         std::string type;
@@ -30,7 +29,7 @@ void World::load(std::string const &filename) {
         } else if (type == "sector") {
             add_sector(ss, vertices);
         } else if (type == "player") {
-            player++;
+            player = create_player(ss);
         } else {
             throw std::runtime_error("Could not load map. Invalid data format found in " + filename);
         }
@@ -39,7 +38,7 @@ void World::load(std::string const &filename) {
     map.close();
 }
 
-int World::get_player() const {
+Player World::get_player() const {
     return player;
 }
 
@@ -62,7 +61,7 @@ void World::add_vertices(std::istringstream &ss, std::vector<Vertex> &v) {
     }
 }
 
-void World::add_sector(std::istringstream &ss, std::vector<Vertex> const &vertices) {
+void World::add_sector(std::istringstream &ss, std::vector<Vertex> const &vertices) noexcept {
     float floor = 0;
     float ceiling = 0;
     ss >> floor;
@@ -73,20 +72,31 @@ void World::add_sector(std::istringstream &ss, std::vector<Vertex> const &vertic
     std::vector<int> points;
     while (ss >> data) {
         points.push_back(data);
-        //std::cout << "pushing back: " << data << std::endl;
     }
 
-    //std::cout << "number of points = " << points.size() << std::endl;
     int m = static_cast<int>(points.size()) / 2;
-    //std::cout << "npoints = " << m << std::endl;
     s.set_number_of_points(m);
     for (int n = 0; n < m; n++) {
-        //std::cout << "num[m+n] = num[" << m+n << "] = " << points[m+n] << std::endl;
         s.add_neighbor(points[n+m]);
         s.add_vertex(vertices[points[n]]);
-        //std::cout << "vertex[n+1] = vertex[" << n+1 << "] = vert[num[n]] = vert[" << points[n] << "]" << std::endl;
     }
 
     s.add_vertex(vertices[0]);
     sectors.push_back(s);
+}
+
+Player World::create_player(std::istringstream &ss) const {
+    float x = 0, y = 0;
+    ss >> x;
+    ss >> y;
+    Vector3D<float> location{x, y, 0};
+
+    float angle = 0;
+    ss >> angle;
+
+    int sector = 0;
+    ss >> sector;
+
+    location.setZ(sectors[sector].get_floor());
+    return Player{location, angle, sector};
 }

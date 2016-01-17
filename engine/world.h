@@ -10,20 +10,22 @@
 
 #include "vertex.h"
 #include "sector.h"
+#include "player.h"
 
 class World {
 
 public:
     void load(std::string const &filename);
 
-    int get_player() const;
+    Player get_player() const;
     std::vector<Sector> get_sectors() const;
 
 private:
-    void add_sector(std::istringstream &ss, std::vector<Vertex> const &vertices);
+    void add_sector(std::istringstream &ss, std::vector<Vertex> const &vertices) noexcept;
     void add_vertices(std::istringstream &ss, std::vector<Vertex> &v);
+    Player create_player(std::istringstream &ss) const;
 
-    int player = 0;
+    Player player;
     std::vector<Sector> sectors;
 };
 
