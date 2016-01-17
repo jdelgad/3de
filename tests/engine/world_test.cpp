@@ -16,7 +16,7 @@ TEST(WorldTest, LoadFileSuccess) {
 
     EXPECT_EQ(1, w.getPlayer());
     EXPECT_EQ(25, w.getSector());
-    EXPECT_EQ(12, w.getVertex());
+    EXPECT_EQ(54, static_cast<int>(w.get_number_of_vertices()));
 
 }
 

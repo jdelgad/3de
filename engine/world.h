@@ -6,6 +6,9 @@
 #define INC_3DE_WORLD_H
 
 #include <string>
+#include <vector>
+
+#include "vertex.h"
 
 class World {
 
@@ -14,12 +17,14 @@ public:
 
     int getPlayer() const;
     int getSector()  const;
-    int getVertex() const;
+    unsigned long get_number_of_vertices() const;
 
 private:
+    void addVertices(std::istringstream &ss);
+
+    std::vector<Vertex> vertices;
     int player = 0;
     int sector = 0;
-    int vertex = 0;
 };
 
 

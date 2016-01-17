@@ -8,9 +8,9 @@
 #include <iostream>
 #include <sstream>
 
-void World::load(std::string const &filename) {
-    const char SPACE = ' ';
+const char SPACE = ' ';
 
+void World::load(std::string const &filename) {
     std::ifstream map;
     map.open(filename, std::fstream::in);
 
@@ -19,19 +19,19 @@ void World::load(std::string const &filename) {
     }
 
     std::string line;
-    vertex = 0;
+    vertices.clear();
     sector = 0;
     player = 0;
-    while (getline(map, line)) {
-        std::stringstream ss(line);
+    while (std::getline(map, line)) {
+        std::istringstream ss(line);
         std::string type;
-        getline(ss, type, SPACE);
+        ss >> type;
 
-        if (type.compare("vertex") == 0) {
-            vertex++;
-        } else if (type.compare("sector") == 0) {
+        if (type == "vertex") {
+            addVertices(ss);
+        } else if (type == "sector") {
             sector++;
-        } else if (type.compare("player") == 0) {
+        } else if (type == "player") {
             player++;
         } else {
             throw std::runtime_error("Could not load map. Invalid data format found in " + filename);
@@ -49,6 +49,16 @@ int World::getSector() const {
     return sector;
 }
 
-int World::getVertex() const {
-    return vertex;
+unsigned long World::get_number_of_vertices() const {
+    return vertices.size();
+}
+
+void World::addVertices(std::istringstream &ss) {
+    float y = 0;
+    ss >> y;
+
+    float x = 0;
+    while (ss >> x) {
+        vertices.emplace_back(Vertex{x, y});
+    }
 }
