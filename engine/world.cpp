@@ -17,7 +17,7 @@ void World::load(std::string const &filename) {
     }
 
     std::string line;
-    vertices.clear();
+    std::vector<Vertex> vertices;
     sectors.clear();
     player = 0;
     while (std::getline(map, line)) {
@@ -26,9 +26,9 @@ void World::load(std::string const &filename) {
         ss >> type;
 
         if (type == "vertex") {
-            add_vertices(ss);
+            add_vertices(ss, vertices);
         } else if (type == "sector") {
-            add_sector(ss);
+            add_sector(ss, vertices);
         } else if (type == "player") {
             player++;
         } else {
@@ -47,21 +47,22 @@ std::vector<Sector> World::get_sectors() const {
     return sectors;
 }
 
-std::vector<Vertex> World::get_vertices() const {
-    return vertices;
-}
 
-void World::add_vertices(std::istringstream &ss) {
+void World::add_vertices(std::istringstream &ss, std::vector<Vertex> &v) {
+    if (sectors.size() != 0) {
+        throw std::runtime_error("Invalid map. Found vertex definition after sector definition.");
+    }
+
     float y = 0;
     ss >> y;
 
     float x = 0;
     while (ss >> x) {
-        vertices.emplace_back(Vertex{x, y});
+        v.emplace_back(Vertex{x, y});
     }
 }
 
-void World::add_sector(std::istringstream &ss) {
+void World::add_sector(std::istringstream &ss, std::vector<Vertex> const &vertices) {
     float floor = 0;
     float ceiling = 0;
     ss >> floor;

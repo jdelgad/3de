@@ -18,13 +18,11 @@ public:
 
     int get_player() const;
     std::vector<Sector> get_sectors() const;
-    std::vector<Vertex> get_vertices() const;
 
 private:
-    void add_sector(std::istringstream &ss);
-    void add_vertices(std::istringstream &ss);
+    void add_sector(std::istringstream &ss, std::vector<Vertex> const &vertices);
+    void add_vertices(std::istringstream &ss, std::vector<Vertex> &v);
 
-    std::vector<Vertex> vertices;
     int player = 0;
     std::vector<Sector> sectors;
 };

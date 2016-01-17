@@ -15,13 +15,10 @@ TEST(WorldTest, LoadFileSuccess) {
     EXPECT_NO_THROW(w.load("../data/map-clear.txt"));
 
     std::vector<Sector> sectors = w.get_sectors();
-    std::vector<Vertex> vertices = w.get_vertices();
     std::vector<Vertex> sv = sectors[0].get_vertices();
 
     EXPECT_EQ(1, w.get_player());
     EXPECT_EQ(25, static_cast<int>(sectors.size()));
-    EXPECT_EQ(54, static_cast<int>(vertices.size()));
-
 
     EXPECT_EQ(1, sv[0].getX());
     EXPECT_EQ(2, sv[0].getY());
@@ -36,4 +33,9 @@ TEST(WorldTest, LoadFileSuccess) {
 TEST(WorldTest, LoadInvalidData) {
     World w;
     EXPECT_THROW(w.load("../data/map-invaliddata.txt"), std::runtime_error);
+}
+
+TEST(WorldTest, LoadInvalidVertex) {
+    World w;
+    EXPECT_THROW(w.load("../data/map-invalidvertex.txt"), std::runtime_error);
 }
