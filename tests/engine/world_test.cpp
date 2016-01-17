@@ -32,10 +32,24 @@ TEST(WorldTest, LoadFileSuccess) {
 
 TEST(WorldTest, LoadInvalidData) {
     World w;
-    EXPECT_THROW(w.load("../data/map-invaliddata.txt"), std::runtime_error);
+    try {
+        w.load("../data/map-invaliddata.txt");
+        FAIL() << "Expected std::runtime_error";
+    } catch (std::runtime_error const &e) {
+        EXPECT_EQ(e.what(), std::string("Could not load map. Invalid data format found in ../data/map-invaliddata.txt"));
+    } catch (...) {
+        FAIL() << "Expected std::runtime_error";
+    }
 }
 
 TEST(WorldTest, LoadInvalidVertex) {
     World w;
-    EXPECT_THROW(w.load("../data/map-invalidvertex.txt"), std::runtime_error);
+    try {
+        w.load("../data/map-invalidvertex.txt");
+        FAIL() << "Expected std::runtime_error";
+    } catch (std::runtime_error const &e) {
+        EXPECT_EQ(e.what(), std::string("Invalid map. Found vertex definition after sector definition."));
+    } catch (...) {
+        FAIL() << "Expected std::runtime_error";
+    }
 }
