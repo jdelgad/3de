@@ -1,5 +1,5 @@
-//
-// Created by jacob on 1/16/16.
+// MIT License, (C)2016
+// Created by jdelgad on 1/16/16.
 //
 
 #include "world.h"
@@ -34,8 +34,7 @@ void World::load(std::string const &filename) {
         } else if (type.compare("player") == 0) {
             player++;
         } else {
-            std::cerr << "invalid line = " << line << std::endl;
-            throw std::runtime_error("invalid data format");
+            throw std::runtime_error("Could not load map. Invalid data format found in " + filename);
         }
     }
 
