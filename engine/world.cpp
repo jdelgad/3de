@@ -98,5 +98,5 @@ Player World::create_player(std::istringstream &ss) const {
     ss >> sector;
 
     location.setZ(sectors[sector].get_floor());
-    return Player{location, angle, sector};
+    return Player{location, angle, sectors[sector]};
 }

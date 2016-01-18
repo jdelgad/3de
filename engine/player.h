@@ -7,11 +7,12 @@
 
 
 #include "vector3D.h"
+#include "sector.h"
 
 class Player {
 public:
     Player();
-    Player(Vector3D<float> const &location, float angle, int sector);
+    Player(Vector3D<float> const &location, float angle, Sector const &sector);
 
     void set_location(Vector3D<float> const &l) noexcept;
     Vector3D<float> get_location() const;
@@ -22,8 +23,10 @@ public:
     void set_angle(float angle) noexcept;
     float get_angle() const;
 
-    void set_sector(int sector) noexcept;
-    int get_sector() const;
+    void set_sector(Sector const &sector) noexcept;
+    Sector get_sector() const;
+
+    void move(float dx, float dy, std::vector<Sector> const &sectors);
 
 private:
     Vector3D<float> location;
@@ -32,7 +35,7 @@ private:
     float angle_sin;
     float angle_cos;
     float yaw;
-    int sector;
+    Sector sector;
 };
 
 

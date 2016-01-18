@@ -16,6 +16,8 @@ public:
     T getY() const;
     T getZ() const;
 
+    void setX(float d);
+    void setY(float y);
     void setZ(float d);
 
 private:
@@ -60,4 +62,16 @@ void Vector3D<T>::setZ(float z) {
     this->z = z;
 }
 
+template<typename T>
+void Vector3D<T>::setX(float x) {
+    this->x = x;
+}
+
+template<typename T>
+void Vector3D<T>::setY(float y) {
+    this->y = y;
+}
+
 #endif //INC_3DE_VECTOR3D_H
+
+
