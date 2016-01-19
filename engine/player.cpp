@@ -6,7 +6,7 @@
 
 #include <algorithm>
 
-const int EyeHeight = 6;
+const int EYE_HEIGHT = 6;
 
 // local functions specific to this cpp implementation
 bool overlap(float a0, float a1, float b0, float b1) {
@@ -34,7 +34,7 @@ Player::Player()
 Player::Player(Vector3D<float> const &location, float angle, Sector const &sector)
 : location{location}, velocity{0, 0, 0}, angle{angle}, angle_sin{0}, angle_cos{0}, yaw{0}, sector{sector} {
 
-    this->location.setZ(location.getZ() + EyeHeight);
+    this->location.setZ(location.getZ() + EYE_HEIGHT);
 }
 
 void Player::set_velocity(Vector3D<float> const &velocity) noexcept {

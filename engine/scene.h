@@ -8,6 +8,8 @@
 
 #include "SDL.h"
 #include "world.h"
+#include "player.h"
+#include "sector.h"
 
 class Scene {
 public:
@@ -18,7 +20,10 @@ public:
 
 private:
     void draw();
-    void detect_vertical_collision(int ducking);
+    void detect_vertical_collision();
+
+    Player player;
+    std::vector<Sector> sectors;
 
     SDL_Surface *surface = nullptr;
     World world;
@@ -27,6 +32,7 @@ private:
     bool ducking = false;
     bool ground = false;
 
+    void detect_horizontal_collision();
 };
 
 
