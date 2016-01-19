@@ -7,12 +7,14 @@ set(HEADER_FILES
         vector3D.h
         vertex.h
         world.h
-        player.h)
+        player.h
+        scene.h)
 
 set(SOURCE_FILES
         sector.cpp
         vertex.cpp
         world.cpp
-        player.cpp)
+        player.cpp
+        scene.cpp)
 
 add_library(engine STATIC ${SOURCE_FILES} ${HEADER_FILES})
