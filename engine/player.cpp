@@ -95,6 +95,16 @@ void Player::move(float dx, float dy, std::vector<Sector> const &sectors) {
 
     location.setX(location.getX() + dx);
     location.setY(location.getY() + dy);
-    angle_sin = std::sin(angle);
-    angle_cos = std::cos(angle);
+}
+
+void Player::set_yaw(float yaw) noexcept {
+    this->yaw = yaw;
+}
+
+float Player::get_angle_cos() const {
+    return std::cos(angle);
+}
+
+float Player::get_angle_sin() const {
+    return std::sin(angle);
 }

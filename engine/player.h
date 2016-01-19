@@ -28,6 +28,11 @@ public:
 
     void move(float dx, float dy, std::vector<Sector> const &sectors);
 
+    void set_yaw(float yaw) noexcept;
+
+    float get_angle_cos() const;
+    float get_angle_sin() const;
+
 private:
     Vector3D<float> location;
     Vector3D<float> velocity;

@@ -4,12 +4,18 @@
 
 #include "scene.h"
 #include <algorithm>
+#include <bitset>
 
 const float DUCK_HEIGHT = 2.5;
 const float EYE_HEIGHT = 6;
 const float GRAVITY = -0.05f;
 const float HEAD_MARGIN = 1;
 const float KNEE_HEIGHT = 2;
+
+// clamp value into set range
+float clamp(float a, float mi, float ma) {
+    return std::min(std::max(a,mi), ma);
+}
 
 // local functions specific to this cpp implementation
 bool overlap(float a0, float a1, float b0, float b1) {
@@ -43,7 +49,9 @@ void Scene::initialize() {
 }
 
 void Scene::game_loop() {
-    std::vector<int> wasd{0,0,0,0};
+    // not an stl vector, may replace with std::bitset
+    std::vector<bool> wsad{false, false, false, false};
+    float yaw = 0;
 
     while (true) {
         SDL_LockSurface(surface);
@@ -51,9 +59,83 @@ void Scene::game_loop() {
         SDL_UnlockSurface(surface);
         SDL_Flip(surface);
 
-        ground = !falling;
         detect_vertical_collision();
         detect_horizontal_collision();
+
+        SDL_Event event;
+        while (SDL_PollEvent(&event)) {
+            switch(event.type) {
+                case SDL_KEYDOWN:
+                case SDL_KEYUP: {
+                    switch (event.key.keysym.sym) {
+                        case SDLK_w: {
+                            wsad[0] = event.type == SDL_KEYDOWN;
+                            break;
+                        }
+                        case SDLK_s: {
+                            wsad[1] = event.type == SDL_KEYDOWN;
+                            break;
+                        }
+                        case SDLK_a: {
+                            wsad[2] = event.type == SDL_KEYDOWN;
+                            break;
+                        }
+                        case SDLK_d: {
+                            wsad[3] = event.type == SDL_KEYDOWN;
+                            break;
+                        }
+                        case SDLK_SPACE: {
+                            if (ground) {
+                                player.get_velocity().setZ(player.get_velocity().getZ() + 0.5);
+                                falling = true;
+                            }
+                        }
+                        default:
+                            break;
+                    }
+                    break;
+                }
+                case SDL_QUIT:
+                    return;
+            }
+        }
+
+        int x, y;
+        SDL_GetRelativeMouseState(&x, &y);
+        player.set_angle(player.get_angle() + x * 0.03f);
+        yaw = clamp(yaw - y * 0.05f, -5, -5);
+        player.set_yaw(yaw - player.get_velocity().getZ() * 0.5f);
+        player.move(0, 0, sectors);
+
+        std::vector<float> move_vector{0, 0};
+        if (wsad[0]) {
+            move_vector[0] += player.get_angle_cos() * 0.2f;
+            move_vector[1] += player.get_angle_sin() * 0.2f;
+        }
+        if (wsad[1]) {
+            move_vector[0] -= player.get_angle_cos() * 0.2f;
+            move_vector[1] -= player.get_angle_sin() * 0.2f;
+        }
+        if (wsad[2]) {
+            move_vector[0] += player.get_angle_cos() * 0.2f;
+            move_vector[1] -= player.get_angle_sin() * 0.2f;
+        }
+        if (wsad[3]) {
+            move_vector[0] -= player.get_angle_cos() * 0.2f;
+            move_vector[1] += player.get_angle_sin() * 0.2f;
+        }
+
+        bool pushing = wsad[0] || wsad[1] || wsad[2] || wsad[3];
+        float acceleration = pushing ? 0.4 : 0.2;
+        Vector3D<float> velocity = player.get_velocity();
+        velocity.setX(velocity.getX() * (1 - acceleration) + move_vector[0] * acceleration);
+        velocity.setY(velocity.getY() * (1-acceleration) + move_vector[1] * acceleration);
+
+        if (pushing) {
+            moving = true;
+        }
+
+        SDL_Delay(10);
     }
 }
 
