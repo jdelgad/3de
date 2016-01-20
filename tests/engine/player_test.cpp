@@ -93,7 +93,74 @@ TEST(PlayerTest, DidNotCrossSegment) {
     EXPECT_EQ(location.getY(), player.get_location().getY());
 }
 
-TEST(PlayerTest, MoveForward) {
+TEST(PlayerTest, CalculateMoveForward) {
+    bool FORWARD = true;
+    Vector3D<float> location{10, 20, 0};
+    float ANGLE = 30.f;
+    Sector s{};
+    Player player{location, ANGLE, s};
 
+    Vector3D<float> velocity{1, 2, 0};
+    player.set_velocity(velocity);
 
+    player.calculate_move(FORWARD, false, false, false);
+    // velocity.x = 1 * (1 - 0.4) + (cos(30) * 0.2) * 0.4 ~= 0.61234
+    EXPECT_FLOAT_EQ(player.get_velocity().getX(), 0.61234);
+
+    // velocity.y = 2 * (1 - 0.4) + (sin(30) * 0.2) * 0.4 ~= 1.12096
+    EXPECT_FLOAT_EQ(player.get_velocity().getY(), 1.1209575);
+}
+
+TEST(PlayerTest, CalculateMoveBackward) {
+    bool BACKWARD = true;
+    Vector3D<float> location{10, 20, 0};
+    float ANGLE = 30.f;
+    Sector s{};
+    Player player{location, ANGLE, s};
+
+    Vector3D<float> velocity{100, 200, 0};
+    player.set_velocity(velocity);
+
+    player.calculate_move(false, false, BACKWARD, false);
+    // velocity.x = 100 * (1 - 0.4) + (-cos(30) * 0.2) * 0.4 ~= 59.9877
+    EXPECT_FLOAT_EQ(player.get_velocity().getX(), 59.98766);
+
+    // velocity.y = 200 * (1 - 0.4) + (-sin(30) * 0.2) * 0.4 ~= 120.079
+    EXPECT_FLOAT_EQ(player.get_velocity().getY(), 120.07904);
+}
+
+TEST(PlayerTest, CalculateMoveLeft) {
+    bool LEFT = true;
+    Vector3D<float> location{10, 20, 0};
+    float ANGLE = 30.f;
+    Sector s{};
+    Player player{location, ANGLE, s};
+
+    Vector3D<float> velocity{40, 50, 0};
+    player.set_velocity(velocity);
+
+    player.calculate_move(false, LEFT, false, false);
+    // velocity.x = 40 * (1 - 0.4) + (sin(30) * 0.2) * 0.4 ~= 23.921
+    EXPECT_FLOAT_EQ(player.get_velocity().getX(), 23.920958);
+
+    // velocity.y = 50 * (1 - 0.4) + (-cos(30) * 0.2) * 0.4 ~= 29.9877
+    EXPECT_FLOAT_EQ(player.get_velocity().getY(), 29.987661);
+}
+
+TEST(PlayerTest, CalculateMoveRight) {
+    bool RIGHT = true;
+    Vector3D<float> location{10, 20, 0};
+    float ANGLE = 30.f;
+    Sector s{};
+    Player player{location, ANGLE, s};
+
+    Vector3D<float> velocity{60, 70, 0};
+    player.set_velocity(velocity);
+
+    player.calculate_move(false, false, false, RIGHT);
+    // velocity.x = 60 * (1 - 0.4) + (-sin(30) * 0.2) * 0.4 ~= 36.079
+    EXPECT_FLOAT_EQ(player.get_velocity().getX(), 36.079044);
+
+    // velocity.y = 70 * (1 - 0.4) + (cos(30) * 0.2) * 0.4 ~= 42.0123
+    EXPECT_FLOAT_EQ(player.get_velocity().getY(), 42.012341);
 }

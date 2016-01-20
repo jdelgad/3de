@@ -14,6 +14,7 @@ public:
     Player();
     Player(Vector3D<float> const &location, float angle, Sector const &sector);
 
+    void set_velocity(Vector3D<float> const &velocity) noexcept;
     Vector3D<float> get_location() const;
 
     Vector3D<float> get_velocity() const;
@@ -42,10 +43,10 @@ public:
     void calculate_move(bool forward, bool left, bool backward, bool right);
 
 private:
-    void move_forward(std::vector<float> &vector);
-    void move_left(std::vector<float> &move_vector);
-    void move_right(std::vector<float> &move_vector);
-    void move_backward(std::vector<float> &move_vector);
+    void move_forward(std::vector<float> &vector) noexcept;
+    void move_left(std::vector<float> &move_vector) noexcept;
+    void move_right(std::vector<float> &move_vector) noexcept;
+    void move_backward(std::vector<float> &move_vector) noexcept;
 
     Vector3D<float> location;
     Vector3D<float> velocity;

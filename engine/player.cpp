@@ -12,8 +12,8 @@ const float HEAD_MARGIN = 1;
 const float KNEE_HEIGHT = 2;
 
 // clamp value into set range
-float clamp(float a, float mi, float ma) {
-    return std::min(std::max(a,mi), ma);
+float clamp(float a, float b, float c) {
+    return std::min(std::max(a,b), c);
 }
 
 // local functions specific to this cpp implementation
@@ -187,22 +187,22 @@ void Player::duck(bool ducking) noexcept {
     falling = true;
 }
 
-void Player::move_forward(std::vector<float> &move_vector) {
+void Player::move_forward(std::vector<float> &move_vector) noexcept {
     move_vector[0] += get_angle_cos() * 0.2f;
     move_vector[1] += get_angle_sin() * 0.2f;
 }
 
-void Player::move_left(std::vector<float> &move_vector) {
-    move_vector[0] += get_angle_cos() * 0.2f;
-    move_vector[1] -= get_angle_sin() * 0.2f;
+void Player::move_left(std::vector<float> &move_vector) noexcept {
+    move_vector[0] += get_angle_sin() * 0.2f;
+    move_vector[1] -= get_angle_cos() * 0.2f;
 }
 
-void Player::move_right(std::vector<float> &move_vector) {
-    move_vector[0] -= get_angle_cos() * 0.2f;
-    move_vector[1] += get_angle_sin() * 0.2f;
+void Player::move_right(std::vector<float> &move_vector) noexcept {
+    move_vector[0] -= get_angle_sin() * 0.2f;
+    move_vector[1] += get_angle_cos() * 0.2f;
 }
 
-void Player::move_backward(std::vector<float> &move_vector) {
+void Player::move_backward(std::vector<float> &move_vector) noexcept {
     move_vector[0] -= get_angle_cos() * 0.2f;
     move_vector[1] -= get_angle_sin() * 0.2f;
 }
@@ -219,10 +219,10 @@ void Player::calculate_move(bool forward, bool left, bool backward, bool right) 
         move_forward(move_vector);
     }
     if (left) {
-        move_backward(move_vector);
+        move_left(move_vector);
     }
     if (backward) {
-        move_left(move_vector);
+        move_backward(move_vector);
     }
     if (right) {
         move_right(move_vector);
@@ -236,4 +236,8 @@ void Player::calculate_move(bool forward, bool left, bool backward, bool right) 
     if (key_pressed) {
         set_moving(true);
     }
+}
+
+void Player::set_velocity(Vector3D<float> const &velocity) noexcept {
+    this->velocity = velocity;
 }
