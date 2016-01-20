@@ -79,7 +79,6 @@ TEST(PlayerTest, DidNotCrossSegment) {
 
     sectors.push_back(s1);
 
-
     Vector3D<float> location{4.184440, 6, 0};
 
     float ANGLE = 25;
@@ -92,4 +91,9 @@ TEST(PlayerTest, DidNotCrossSegment) {
     EXPECT_EQ(ANGLE, player.get_angle());
     EXPECT_EQ(location.getX(), player.get_location().getX());
     EXPECT_EQ(location.getY(), player.get_location().getY());
+}
+
+TEST(PlayerTest, MoveForward) {
+
+
 }

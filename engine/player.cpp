@@ -6,11 +6,15 @@
 
 #include <algorithm>
 
-const float DUCK_HEIGHT = 2.5;
 const float EYE_HEIGHT = 6;
 const float GRAVITY = -0.05f;
 const float HEAD_MARGIN = 1;
 const float KNEE_HEIGHT = 2;
+
+// clamp value into set range
+float clamp(float a, float mi, float ma) {
+    return std::min(std::max(a,mi), ma);
+}
 
 // local functions specific to this cpp implementation
 bool overlap(float a0, float a1, float b0, float b1) {
@@ -41,14 +45,6 @@ Player::Player(Vector3D<float> const &location, float angle, Sector const &secto
     this->location.setZ(location.getZ() + EYE_HEIGHT);
 }
 
-void Player::set_velocity(Vector3D<float> const &velocity) noexcept {
-    this->velocity = velocity;
-}
-
-void Player::set_sector(Sector const &sector) noexcept {
-    this->sector = sector;
-}
-
 Sector Player::get_sector() const {
     return sector;
 }
@@ -63,10 +59,6 @@ Vector3D<float> Player::get_velocity() const {
 
 void Player::set_angle(float angle) noexcept {
     this->angle = angle;
-}
-
-void Player::set_location(Vector3D<float> const &l) noexcept {
-    this->location = l;
 }
 
 Vector3D<float> Player::get_location() const {
@@ -99,10 +91,6 @@ void Player::move(float dx, float dy, std::vector<Sector> const &sectors) {
 
     location.setX(location.getX() + dx);
     location.setY(location.getY() + dy);
-}
-
-void Player::set_yaw(float yaw) noexcept {
-    this->yaw = yaw;
 }
 
 float Player::get_angle_cos() const {
@@ -217,4 +205,35 @@ void Player::move_right(std::vector<float> &move_vector) {
 void Player::move_backward(std::vector<float> &move_vector) {
     move_vector[0] -= get_angle_cos() * 0.2f;
     move_vector[1] -= get_angle_sin() * 0.2f;
+}
+
+void Player::calculate_angle(int x, int y) {
+    angle += + x * 0.03f;
+    yaw = clamp(yaw - y * 0.05f, -5, -5) - velocity.getZ() * 0.5f;
+}
+
+
+void Player::calculate_move(bool forward, bool left, bool backward, bool right) {
+    std::vector<float> move_vector{0, 0};
+    if (forward) {
+        move_forward(move_vector);
+    }
+    if (left) {
+        move_backward(move_vector);
+    }
+    if (backward) {
+        move_left(move_vector);
+    }
+    if (right) {
+        move_right(move_vector);
+    }
+    bool key_pressed = forward || backward || left || right;
+    float acceleration = key_pressed ? 0.4f : 0.2f;
+
+    velocity.setX(velocity.getX() * (1 - acceleration) + move_vector[0] * acceleration);
+    velocity.setY(velocity.getY() * (1-acceleration) + move_vector[1] * acceleration);
+
+    if (key_pressed) {
+        set_moving(true);
+    }
 }

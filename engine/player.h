@@ -14,21 +14,16 @@ public:
     Player();
     Player(Vector3D<float> const &location, float angle, Sector const &sector);
 
-    void set_location(Vector3D<float> const &l) noexcept;
     Vector3D<float> get_location() const;
 
-    void set_velocity(Vector3D<float> const &velocity) noexcept;
     Vector3D<float> get_velocity() const;
 
     void set_angle(float angle) noexcept;
     float get_angle() const;
 
-    void set_sector(Sector const &sector) noexcept;
     Sector get_sector() const;
 
     void move(float dx, float dy, std::vector<Sector> const &sectors);
-
-    void set_yaw(float yaw) noexcept;
 
     float get_angle_cos() const;
     float get_angle_sin() const;
@@ -42,12 +37,16 @@ public:
     void jump();
     void duck(bool ducking) noexcept;
 
+    void calculate_angle(int x, int y);
+
+    void calculate_move(bool forward, bool left, bool backward, bool right);
+
+private:
     void move_forward(std::vector<float> &vector);
     void move_left(std::vector<float> &move_vector);
     void move_right(std::vector<float> &move_vector);
     void move_backward(std::vector<float> &move_vector);
 
-private:
     Vector3D<float> location;
     Vector3D<float> velocity;
     float angle;

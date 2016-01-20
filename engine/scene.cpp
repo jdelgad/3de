@@ -5,11 +5,6 @@
 #include "scene.h"
 #include <algorithm>
 
-// clamp value into set range
-float clamp(float a, float mi, float ma) {
-    return std::min(std::max(a,mi), ma);
-}
-
 Scene::Scene(World const &world)
 : player{world.get_player()}, sectors{world.get_sectors()} {
 
@@ -27,9 +22,7 @@ void Scene::game_loop() {
     bool move_forward = false;
     bool move_backward = false;
     bool strafe_left = false;
-    bool strafe_right;
-
-    float yaw = 0;
+    bool strafe_right = false;
 
     while (true) {
         SDL_LockSurface(surface);
@@ -37,6 +30,7 @@ void Scene::game_loop() {
         SDL_UnlockSurface(surface);
         SDL_Flip(surface);
 
+        player.set_ground();
         player.fall();
         player.walk(sectors);
 
@@ -77,34 +71,10 @@ void Scene::game_loop() {
 
         int x, y;
         SDL_GetRelativeMouseState(&x, &y);
-        player.set_angle(player.get_angle() + x * 0.03f);
-        yaw = clamp(yaw - y * 0.05f, -5, -5);
-        player.set_yaw(yaw - player.get_velocity().getZ() * 0.5f);
+        player.calculate_angle(x, y);
         player.move(0, 0, sectors);
 
-        std::vector<float> move_vector{0, 0};
-        if (move_forward) {
-            player.move_forward(move_vector);
-        }
-        if (strafe_left) {
-            player.move_backward(move_vector);
-        }
-        if (move_backward) {
-            player.move_left(move_vector);
-        }
-        if (strafe_right) {
-            player.move_right(move_vector);
-        }
-
-        bool key_pressed = move_forward || move_backward || strafe_left || strafe_right;
-        float acceleration = key_pressed ? 0.4f : 0.2f;
-        Vector3D<float> velocity = player.get_velocity();
-        velocity.setX(velocity.getX() * (1 - acceleration) + move_vector[0] * acceleration);
-        velocity.setY(velocity.getY() * (1-acceleration) + move_vector[1] * acceleration);
-
-        if (key_pressed) {
-            player.set_moving(true);
-        }
+        player.calculate_move(move_forward, strafe_left, move_backward, strafe_right);
 
         SDL_Delay(10);
     }
