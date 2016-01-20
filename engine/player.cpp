@@ -6,7 +6,11 @@
 
 #include <algorithm>
 
-const int EYE_HEIGHT = 6;
+const float DUCK_HEIGHT = 2.5;
+const float EYE_HEIGHT = 6;
+const float GRAVITY = -0.05f;
+const float HEAD_MARGIN = 1;
+const float KNEE_HEIGHT = 2;
 
 // local functions specific to this cpp implementation
 bool overlap(float a0, float a1, float b0, float b1) {
@@ -32,7 +36,7 @@ Player::Player()
 }
 
 Player::Player(Vector3D<float> const &location, float angle, Sector const &sector)
-: location{location}, velocity{0, 0, 0}, angle{angle}, angle_sin{0}, angle_cos{0}, yaw{0}, sector{sector} {
+: location{location}, velocity{0, 0, 0}, angle{angle}, yaw{0}, sector{sector} {
 
     this->location.setZ(location.getZ() + EYE_HEIGHT);
 }
@@ -107,4 +111,110 @@ float Player::get_angle_cos() const {
 
 float Player::get_angle_sin() const {
     return std::sin(angle);
+}
+
+void Player::fall() {
+    if (!falling) {
+        return;
+    }
+
+    velocity.setZ(get_velocity().getZ() - GRAVITY);
+
+    float next_player_z = location.getZ() + velocity.getZ();
+    if (velocity.getZ() < 0 &&
+        next_player_z < sector.get_floor() + EYE_HEIGHT) {
+        location.setZ(sector.get_floor() + EYE_HEIGHT);
+        velocity.setZ(0);
+        falling = false;
+        ground = true;
+    } else if (velocity.getZ() > 0 &&
+               next_player_z > sector.get_ceiling()) {
+        velocity.setZ(0);
+        falling = true;
+    }
+
+    if (falling) {
+        location.setZ(location.getZ() + velocity.getZ());
+        moving = true;
+    }
+
+}
+
+void Player::walk(std::vector<Sector> const &sectors) {
+
+    if (!moving) {
+        return;
+    }
+
+    float dx = velocity.getX();
+    float dy = velocity.getY();
+
+    for (int i = 0; i < sector.get_number_of_points(); i++) {
+        if (intersect(location.getX(), location.getY(),
+                      location.getX()+velocity.getX(), location.getY() + velocity.getY(),
+                      sector.get_vertices()[i].getX(), sector.get_vertices()[i].getY(),
+                      sector.get_vertices()[i+1].getX(), sector.get_vertices()[i+1].getY()) &&
+            pointside(location.getX()+velocity.getX(), location.getY()+velocity.getY(),
+                      sector.get_vertices()[i].getX(), sector.get_vertices()[i].getY(),
+                      sector.get_vertices()[i+1].getX(), sector.get_vertices()[i+1].getY())) {
+
+            // check where the hole is??
+            float hole_low = sector.get_neighbors()[i] < 0 ? 9e9 : std::max(sector.get_floor(), sectors[sector.get_neighbors()[i]].get_floor());
+            float hole_high = sector.get_neighbors()[i] < 0 ? 9e9 : std::min(sector.get_ceiling(), sectors[sector.get_neighbors()[i]].get_ceiling());
+
+            if (hole_high < location.getZ() + HEAD_MARGIN ||
+                hole_low > location.getZ() - EYE_HEIGHT + KNEE_HEIGHT) {
+                // bumps into a wall. slide along the wall
+                // from Wikipedia's "vector projection"
+                float xd = sector.get_vertices()[i+1].getX() - sector.get_vertices()[i].getX();
+                float yd = sector.get_vertices()[i+1].getY() - sector.get_vertices()[i].getY();
+                dx = xd * (dx * xd + yd * dy) / (xd * xd + yd * yd);
+                dy = yd * (dx * xd + yd * dy) / (xd * xd + yd * yd);
+                moving = false;
+            }
+        }
+    }
+
+    move(dx, dy, sectors);
+    falling = true;
+}
+
+void Player::set_moving(bool moving) noexcept {
+    this->moving = moving;
+}
+
+void Player::jump() {
+    if (ground) {
+        location.setZ(velocity.getZ() + 0.5f);
+        falling = true;
+    }
+}
+
+void Player::set_ground() noexcept {
+    ground = !falling;
+}
+
+void Player::duck(bool ducking) noexcept {
+    this->ducking = ducking;
+    falling = true;
+}
+
+void Player::move_forward(std::vector<float> &move_vector) {
+    move_vector[0] += get_angle_cos() * 0.2f;
+    move_vector[1] += get_angle_sin() * 0.2f;
+}
+
+void Player::move_left(std::vector<float> &move_vector) {
+    move_vector[0] += get_angle_cos() * 0.2f;
+    move_vector[1] -= get_angle_sin() * 0.2f;
+}
+
+void Player::move_right(std::vector<float> &move_vector) {
+    move_vector[0] -= get_angle_cos() * 0.2f;
+    move_vector[1] += get_angle_sin() * 0.2f;
+}
+
+void Player::move_backward(std::vector<float> &move_vector) {
+    move_vector[0] -= get_angle_cos() * 0.2f;
+    move_vector[1] -= get_angle_sin() * 0.2f;
 }

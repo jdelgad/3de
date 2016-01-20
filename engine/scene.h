@@ -20,19 +20,12 @@ public:
 
 private:
     void draw();
-    void detect_vertical_collision();
 
     Player player;
     std::vector<Sector> sectors;
 
     SDL_Surface *surface = nullptr;
     World world;
-    bool falling = true;
-    bool moving = false;
-    bool ducking = false;
-    bool ground = false;
-
-    void detect_horizontal_collision();
 };
 
 

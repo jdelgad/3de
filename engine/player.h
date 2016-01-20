@@ -33,14 +33,30 @@ public:
     float get_angle_cos() const;
     float get_angle_sin() const;
 
+    void fall();
+    void walk(std::vector<Sector> const &sectors);
+
+    void set_ground() noexcept;
+    void set_moving(bool moving) noexcept;
+
+    void jump();
+    void duck(bool ducking) noexcept;
+
+    void move_forward(std::vector<float> &vector);
+    void move_left(std::vector<float> &move_vector);
+    void move_right(std::vector<float> &move_vector);
+    void move_backward(std::vector<float> &move_vector);
+
 private:
     Vector3D<float> location;
     Vector3D<float> velocity;
     float angle;
-    float angle_sin;
-    float angle_cos;
     float yaw;
     Sector sector;
+    bool falling = true;
+    bool moving = false;
+    bool ducking = false;
+    bool ground = false;
 };
 
 
