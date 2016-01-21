@@ -195,13 +195,15 @@ TEST(PlayerTest, CalculateViewingAngleTwiceOver) {
     Vector3D<float> velocity{0, 0, 10};
     player.set_velocity(velocity);
 
-    player.calculate_angle(0, 0);
+    player.calculate_angle(70, 70);
 
-    EXPECT_FLOAT_EQ(player.get_angle(), 0);
-    EXPECT_FLOAT_EQ(player.get_yaw(), 0);
+    EXPECT_FLOAT_EQ(player.get_angle(), 22.1);
+    EXPECT_FLOAT_EQ(player.get_yaw(), -8.5);
 
-    player.calculate_angle(0, 0);
+    Vector3D<float> velocity2{0, 0, 25};
+    player.set_velocity(velocity2);
 
-    EXPECT_FLOAT_EQ(player.get_angle(), 0);
-    EXPECT_FLOAT_EQ(player.get_yaw(), 0);
+    player.calculate_angle(10, 20);
+    EXPECT_FLOAT_EQ(player.get_angle(), 22.4);
+    EXPECT_FLOAT_EQ(player.get_yaw(), -17);
 }

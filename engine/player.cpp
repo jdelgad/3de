@@ -5,6 +5,7 @@
 #include "player.h"
 
 #include <algorithm>
+#include <iostream>
 
 const float EYE_HEIGHT = 6;
 const float GRAVITY = -0.05f;
@@ -209,7 +210,9 @@ void Player::move_backward(std::vector<float> &move_vector) noexcept {
 
 void Player::calculate_angle(int x, int y) {
     angle += x * 0.03f;
-    yaw = clamp(yaw - y * 0.05f, -5, 5) - velocity.getZ() * 0.5f;
+    delta = clamp(delta - y * 0.05f, -5, 5);
+    yaw = delta - velocity.getZ() * 0.5f;
+    std::cout << delta << " " << yaw << std::endl;
 }
 
 void Player::calculate_move(bool forward, bool left, bool backward, bool right) {

@@ -60,6 +60,7 @@ private:
     bool moving = false;
     bool ducking = false;
     bool ground = false;
+    float delta = 0;
 };
 
 
