@@ -42,6 +42,9 @@ public:
 
     void calculate_move(bool forward, bool left, bool backward, bool right);
 
+    void set_yaw(float yaw) noexcept;
+    float get_yaw() const;
+
 private:
     void move_forward(std::vector<float> &vector) noexcept;
     void move_left(std::vector<float> &move_vector) noexcept;

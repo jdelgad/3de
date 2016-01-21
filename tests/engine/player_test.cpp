@@ -164,3 +164,22 @@ TEST(PlayerTest, CalculateMoveRight) {
     // velocity.y = 70 * (1 - 0.4) + (cos(30) * 0.2) * 0.4 ~= 42.0123
     EXPECT_FLOAT_EQ(player.get_velocity().getY(), 42.012341);
 }
+
+TEST(PlayerTest, CalculateViewingAngleAllZeroes) {
+    float ANGLE = 0;
+    Player player{};
+    player.set_angle(ANGLE);
+
+    float YAW = 0;
+    player.set_yaw(YAW);
+
+    Vector3D<float> velocity{0, 0, 0};
+    player.set_velocity(velocity);
+
+    player.calculate_angle(0, 0);
+
+    EXPECT_FLOAT_EQ(player.get_angle(), 0);
+
+    // player.yaw = min(max(0, -5), 5) - 0 * 0.5f
+    EXPECT_FLOAT_EQ(player.get_yaw(), 0);
+}

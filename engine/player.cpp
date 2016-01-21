@@ -208,10 +208,9 @@ void Player::move_backward(std::vector<float> &move_vector) noexcept {
 }
 
 void Player::calculate_angle(int x, int y) {
-    angle += + x * 0.03f;
-    yaw = clamp(yaw - y * 0.05f, -5, -5) - velocity.getZ() * 0.5f;
+    angle += x * 0.03f;
+    yaw = clamp(yaw - y * 0.05f, -5, 5) - velocity.getZ() * 0.5f;
 }
-
 
 void Player::calculate_move(bool forward, bool left, bool backward, bool right) {
     std::vector<float> move_vector{0, 0};
@@ -227,17 +226,24 @@ void Player::calculate_move(bool forward, bool left, bool backward, bool right) 
     if (right) {
         move_right(move_vector);
     }
+
     bool key_pressed = forward || backward || left || right;
     float acceleration = key_pressed ? 0.4f : 0.2f;
 
     velocity.setX(velocity.getX() * (1 - acceleration) + move_vector[0] * acceleration);
-    velocity.setY(velocity.getY() * (1-acceleration) + move_vector[1] * acceleration);
+    velocity.setY(velocity.getY() * (1 - acceleration) + move_vector[1] * acceleration);
 
-    if (key_pressed) {
-        set_moving(true);
-    }
+    set_moving(key_pressed);
 }
 
 void Player::set_velocity(Vector3D<float> const &velocity) noexcept {
     this->velocity = velocity;
+}
+
+float Player::get_yaw() const {
+    return yaw;
+}
+
+void Player::set_yaw(float yaw) noexcept {
+    this->yaw = yaw;
 }
