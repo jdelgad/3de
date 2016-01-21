@@ -107,3 +107,7 @@ install_manifest.txt
 ### Clion ###
 Debug/
 Release/
+
+### Executables ###
+3de
+tests/engine/runUnitTests

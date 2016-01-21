@@ -183,3 +183,25 @@ TEST(PlayerTest, CalculateViewingAngleAllZeroes) {
     // player.yaw = min(max(0, -5), 5) - 0 * 0.5f
     EXPECT_FLOAT_EQ(player.get_yaw(), 0);
 }
+
+TEST(PlayerTest, CalculateViewingAngleTwiceOver) {
+    float ANGLE = 20;
+    Player player{};
+    player.set_angle(ANGLE);
+
+    float YAW = 0;
+    player.set_yaw(YAW);
+
+    Vector3D<float> velocity{0, 0, 10};
+    player.set_velocity(velocity);
+
+    player.calculate_angle(0, 0);
+
+    EXPECT_FLOAT_EQ(player.get_angle(), 0);
+    EXPECT_FLOAT_EQ(player.get_yaw(), 0);
+
+    player.calculate_angle(0, 0);
+
+    EXPECT_FLOAT_EQ(player.get_angle(), 0);
+    EXPECT_FLOAT_EQ(player.get_yaw(), 0);
+}

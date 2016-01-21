@@ -1,0 +1,11 @@
+language: cpp
+install:
+  - sudo pip install cpp-coveralls
+script:
+  - mkdir build
+  - cd build
+  - cmake ..
+  - make
+  - ./tests/engine/runUnitTests
+after_success:
+  - coveralls --root .. -E ".*external.*" -E ".*CMakeFiles.*" -E ".*tests/engine/.*.cpp.*"
